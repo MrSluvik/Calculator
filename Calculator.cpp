@@ -1,38 +1,85 @@
 ﻿#include <iostream>
 #include<Windows.h> 
+#include <fstream>
+
 using namespace std;
 
-double Sum(double a, double b) //ф-н суми
+double Sum(double number1, double number2) //ф-н суми
 {
-	return a + b;
+	return number1 + number2;
 }
 
-double Dif(double a, double b) //ф-н різниці
+double Dif(double number1, double number2) //ф-н різниці
 {
-	return a - b;
+	return number1 - number2;
 }
-double Product(double a, double b)//ф-н множення
+double Product(double number1, double number2)//ф-н множення
 {
-	return a * b;
+	return number1 * number2;
 }
-double Division(double a, double b) //ф-н ділення
+double Division(double number1, double number2) //ф-н ділення
 {
-	return a / b;
+	return number1 / number2;
 }
-void GetSqrt(double &a, double &b)//ф-н добування корення , передавання по силці
+void GetSqrt(double & number1)//ф-н добування корення , передавання по силці
 {	
-	a=sqrt(a);
-	b = sqrt(b);
-}
-void GetPow(double& a, double b)//ф-н піднесення до степення
-{
-	a = pow(a,b);
+	number1 =sqrt(number1);
 	
+}
+void GetSqrtMinus(double& number1)//ф-н добування корення з мінус числа, передавання по силці
+{
+	number1 = sqrt(-number1);
+	
+}
+
+void GetPow(double& number1, double power)//ф-н піднесення до степення
+{
+	number1 = pow(number1,power);	
 }
 void Menu() //ф-н виводу інформаційного меню
 {
 	cout << "\t\t\t\tВітаю!\nДана версія калькулятора підтримує наступні операції :додавання , віднімання,множення, ділення,піднесення до степення та знаходження корення" << endl;
-	cout << "Для використання одної з операції потрібно ввести символ:\nдодаванн '+'\nВіднімання '-'\nМноження '*'\nДілення '/'\nПіднесення до степеня '^'\nЗнаходження кореня '$'" << endl;
+	cout << "Для використання одної з операції потрібно ввести символ:\nдодаванн '+'\nВіднімання '-'\nМноження '*'\nДілення '/'\nПіднесення до степеня '^'\nЗнаходження кореня '$'\nЗнаходження корення з від'ємного числа '#'" << endl;
+}
+void LoginFile(double results)
+{	
+		ofstream file("results.txt", ios_base::app);// Відкриваємо файл для дозапису
+
+		if (!file.is_open()) {// Перевіряємо чи файл відкрився
+			cout << "Файл не відкрито/Файл не створено";
+			return;
+		}
+		else{
+		file << results << "'\n'";// Записуємо результат у файл
+		file.close();// Закриваємо файл	
+		}
+}
+
+void LoginFile(string results)//перегрузка фукції запису в файл для ділення на нуль
+{
+	ofstream file("results.txt", ios_base::app);
+
+	if (!file.is_open()) {
+		cout << "Файл не відкрито/Файл не створено";
+		return;
+	}
+	else {
+		file << results << "'\n'";
+		file.close();
+	}
+}
+void LoginFile(double results ,string complex)//перегрузка фукції запису в файл для добування кореня з -числа
+{
+	ofstream file("results.txt", ios_base::app);
+
+	if (!file.is_open()) {
+		cout << "Файл не відкрито/Файл не створено";
+		return;
+	}
+	else {
+		file << results << complex << "'\n'";
+		file.close();
+	}
 }
 
 int main()
@@ -40,45 +87,63 @@ int main()
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);//підключення української
 	
-	char oper;
-	double  a = 0, b = 0;
+	char operation;
+	double  number1 = 0, number2 = 0;
+	double results=0;
+	
 	char ch = 'y';//оголошення всіх змінних
 	Menu();
 		while (ch!='n')//цикл для багаторазового використання 
 		{
 			cout << "Введіть число a та b" << endl;
-			cin >> a >> b;
-			cout << "Виберіть операцію '+' '-' '*' '/' '^' '$'" << endl;
-			cin >> oper;//введення потрібних данних
+			cin >> number1 >> number2;
+			cout << "Виберіть операцію '+' '-' '*' '/' '^' '$' '#'" << endl;
+			cin >> operation;//введення потрібних данних
 
-			switch (oper)
+			switch (operation)
 			{
-			case '+':cout << Sum(a, b) << endl;///виклик ф-н суми і вивід результату
+			case '+':results = Sum(number1, number2);///виклик ф-н суми і вивід результату
+				LoginFile(results);
+				cout << "Сума = "<<results << endl;
 				break;
-			case '-':cout << Dif(a, b) << endl;//виклик ф-н різниці і вивід результату
+			case '-':results = Dif(number1, number2);//виклик ф-н різниці і вивід результату
+				LoginFile(results);
+				cout << "Різниця = " << results << endl;
 				break;
-			case '*':cout << Product(a, b) << endl;//виклик ф-н добутку і вивід результату
+			case '*':results =Product(number1, number2) ;//виклик ф-н добутку і вивід результату
+				LoginFile(results);
+				cout << "Добуток = " << results << endl;
 				break;
-			case '/':  if (b == 0){//перевірка чи користувач хоче ділити на 0
-				cout << "На 0 не ділиться" << endl;
+			case '/':  if (number2 == 0){//перевірка чи користувач хоче ділити на 0
+				cout << "На 0 не ділиться але якщо вивичали ВишМат то результат  Infinity" << endl;
+				LoginFile("Infinity");
 				break;
 			 }
 			 else {
-				cout << Division(a, b) << endl;//виклик ф-н ділення і вивід результату
+				results=Division(number1, number2);//виклик ф-н ділення і вивід результату
+				LoginFile(results);
+				cout << "Частка = " << results << endl;
 				break;
 			 }
 			case '^':  
-				GetPow(a, b);//виклик ф-н піднесення до степення
-				cout <<"Піднесене число а до степеня "<<b<<" = "<< a << endl;
+				GetPow(number1,number2);//виклик ф-н піднесення до степення
+				cout <<"Піднесене число а до степеня "<<number2<<" = "<< number1 << endl;
+				LoginFile(number1);
 				break;
 			case '$':
-				GetSqrt(a, b);//виклик ф-н добування корення
-				cout << "Корінь з числа а = " << a << " Корінь з числа b = " << b << endl;
+				GetSqrt(number1);//виклик ф-н добування корення
+				cout << "Корінь з числа а = " << number1 <<endl;
+				LoginFile(number1);
 				break;
-			
+			case '#':
+				GetSqrtMinus(number1);//виклик ф-н добування корення від`ємного числа
+				cout << "Корінь з - числа а = " << number1<<"i" <<  endl;
+				LoginFile(number1,"i");
+				break;	
+				
 			 default:cout << "Ви ввели не вірну операцію" << endl;
 				break;
-			}
+			}			
 			cout << "Якщо бажаєте припинити роботу введіть 'n' ,якщо хочете продовжити введіть будь-який символ" << endl;
 			cin >> ch;
 			system("cls");//чистим консоль
