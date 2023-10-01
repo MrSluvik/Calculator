@@ -1,6 +1,8 @@
 ﻿#include <iostream>
 #include<Windows.h> 
 #include <fstream>
+#include<string>
+#include <algorithm>
 
 using namespace std;
 
@@ -21,10 +23,40 @@ double Division(double number1, double number2) //ф-н ділення
 {
 	return number1 / number2;
 }
-void GetSqrt(double & number1)//ф-н добування корення , передавання по силці
+void GetSqrt(double & number1 ,double& number2)//ф-н добування корення , передавання по силці
 {	
-	number1 =sqrt(number1);
+	number1 =sqrt(number1);	
+	number2 = sqrt(number2);
 	
+}
+void СonvertBinary(int number1, int number2)//ф-н переведення числа в двійкову систему числення
+{
+	int* arr1 = new int[100];
+	int* arr2 = new int[100];
+	int t = 0, j=0;
+	while (number1 != 0) {
+		arr1[t] = number1 % 2;
+		number1 = number1 / 2;		
+		t++;		
+	}
+	while (number2 != 0) {
+		arr2[j] = number2 % 2;
+		number2 = number2 / 2;
+		
+		j++;
+	}	
+	for (int i = t-1; i >= 0; i--)
+	{
+		cout << arr1[i];
+	}
+	cout << endl;
+	for (int i = j - 1; i >= 0; i--)
+	{
+		cout << arr2[i];
+	}
+	cout << endl;
+	delete[] arr2;
+	delete[] arr1;
 }
 
 void GetPow(double& number1, double power)//ф-н піднесення до степення
@@ -49,6 +81,19 @@ void WritingFile(double results)
 		file.close();// Закриваємо файл	
 		}
 }
+void WritingFile(double results, double results1)//перегрузка фукції запису в файл для добування корення
+{
+	ofstream file("results.txt", ios_base::app);// Відкриваємо файл для дозапису
+
+	if (!file.is_open()) {// Перевіряємо чи файл відкрився
+		cout << "Файл не відкрито/Файл не створено";
+		return;
+	}
+	else {
+		file << results <<results1<< "'\n'";// Записуємо результат у файл
+		file.close();// Закриваємо файл	
+	}
+}
 
 void WritingFile(string results)//перегрузка фукції запису в файл для ділення на нуль
 {
@@ -63,19 +108,6 @@ void WritingFile(string results)//перегрузка фукції запису
 		file.close();
 	}
 }
-void WritingFile(double results ,string complex)//перегрузка фукції запису в файл для добування кореня з -числа
-{
-	ofstream file("results.txt", ios_base::app);
-
-	if (!file.is_open()) {
-		cout << "Файл не відкрито/Файл не створено";
-		return;
-	}
-	else {
-		file << results << complex << "'\n'";
-		file.close();
-	}
-}
 
 int main()
 {
@@ -85,7 +117,7 @@ int main()
 	char operation;
 	double  number1 = 0, number2 = 0;
 	double results=0;
-	
+		
 	char ch = 'y';//оголошення всіх змінних
 	Menu();
 		while (ch!='n')//цикл для багаторазового використання 
@@ -126,10 +158,15 @@ int main()
 				WritingFile(number1);
 				break;
 			case '$':
-				GetSqrt(number1);//виклик ф-н добування корення
+				GetSqrt(number1,number2);//виклик ф-н добування корення
 				cout << "Корінь з числа а = " << number1 <<endl;
-				WritingFile(number1);
+				WritingFile(number1 , number2);
 				break; 		
+
+			case '#':				
+				СonvertBinary(number1, number2);
+				//WritingFile(Getdva(number1 ));
+				break;			
 				
 			 default:cout << "Ви ввели не вірну операцію" << endl;
 				break;
@@ -138,5 +175,5 @@ int main()
 			cin >> ch;
 			system("cls");//чистим консоль
 		}
-		return 0;
+		//return 0;
 }
