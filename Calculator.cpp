@@ -55,6 +55,7 @@ void СonvertBinary(int number1, int number2)//ф-н переведення чи
 		cout << arr2[i];
 	}
 	cout << endl;
+
 	delete[] arr2;
 	delete[] arr1;
 }
@@ -108,6 +109,7 @@ void WritingFile(string results)//перегрузка фукції запису
 		file.close();
 	}
 }
+
 
 int main()
 {
@@ -164,8 +166,7 @@ int main()
 				break; 		
 
 			case '#':				
-				СonvertBinary(number1, number2);
-				//WritingFile(Getdva(number1 ));
+				СonvertBinary(number1, number2);				
 				break;			
 				
 			 default:cout << "Ви ввели не вірну операцію" << endl;
